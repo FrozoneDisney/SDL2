@@ -14,7 +14,7 @@ WinRen::WinRen(const char* p_title, int p_w, int p_h)
 		std::cout << "Window failed to init, error: " << SDL_GetError() << std::endl;
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 }
 
 void WinRen::cleanUp()
@@ -33,6 +33,17 @@ SDL_Texture* WinRen::loadTex(const char* p_fpath)
 	return texture;
 }
 
+int WinRen::getRefreshRate()
+{
+	int displayIndex = SDL_GetWindowDisplayIndex( window );
+
+	SDL_DisplayMode mode;
+
+	SDL_GetDisplayMode(displayIndex, 0, &mode);
+
+	return mode.refresh_rate;
+}
+
 void WinRen::clear()
 {
 	SDL_RenderClear(renderer);
@@ -47,8 +58,8 @@ void WinRen::render(Entity& p_entity)
 	src.h = p_entity.getCurrentFrame().h;
 
 	SDL_Rect dst;
-	dst.x = p_entity.getX();
-	dst.y = p_entity.getY();
+	dst.x = p_entity.getPos().x;
+	dst.y = p_entity.getPos().y;
 	dst.w = p_entity.getCurrentFrame().w;
 	dst.h = p_entity.getCurrentFrame().h;
 
