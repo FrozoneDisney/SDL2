@@ -6,6 +6,7 @@
 #include "WinRen.hpp"
 #include "Entity.hpp"
 #include "Utils.hpp"
+#include "Snake.hpp"
 
 int main(int argc, char* args[])
 {
@@ -18,15 +19,11 @@ int main(int argc, char* args[])
 	WinRen window("Test 1.0", 1280, 720);
 
 	SDL_Texture* player = window.loadTex("player.png");
+	SDL_Texture* body = window.loadTex("body.png");
+	SDL_Texture* anchor = window.loadTex("bodyanch.png");
+	SDL_Texture* apple = window.loadTex("apple.png");
 
-	std::vector<Entity> entities = {Entity(Vector2f(0.0f, 0.0f), player),
-									Entity(Vector2f(100.0f, 100.0f), player),
-									Entity(Vector2f(300.0f, 300.0f), player)};
-	{
-		Entity test(Vector2f(100.0f, 50.0f), player);
-		entities.push_back(test);
-	}
-
+	std::vector<Snake> entities = { Snake(Vector2f(532.0f, 0.0f), player), Snake(Vector2f(499.0f, 0.0f), body), Snake(Vector2f(466.0f, 0.0f), body),Snake(Vector2f(433.0f, 0.0f), body) };
 	bool gameRunning = true;
 
 	SDL_Event event;
@@ -35,6 +32,10 @@ int main(int argc, char* args[])
 	float accumulator = 0.0f;
 	float currentTime = utils::hireTimeInSeconds();
 	const Uint8* keystates = SDL_GetKeyboardState(NULL);
+	for (Snake& e : entities)
+	{
+		e.changeDir(Vector2f(3, 0));
+	}
 
 	while (gameRunning)
 	{
@@ -59,13 +60,29 @@ int main(int argc, char* args[])
 					entities[0].changeDir(Vector2f(-3, 0));
 				if (keystates[SDL_SCANCODE_RIGHT])
 					entities[0].changeDir(Vector2f(3, 0));
+				if (keystates[SDL_SCANCODE_E])
+				{
+					entities.push_back(Snake(entities.back().getAdd(), body));
+					entities.back().changeDir(entities[entities.size() - 2].getDir());
+				
+				}
 			}
-			entities[0].move();
+			for (Snake& e : entities)
+			{
+				if (e.notHead(entities))
+				{
+					if (e.isInFront(entities))
+					{
+						e.setTex(anchor);
+						e.isAligned(entities);
+					}
+				}
+				e.move();
+			}
 			
 			accumulator -= timeStep;
 		}
 
-		const float alpha = accumulator / timeStep; 
 
 		
 

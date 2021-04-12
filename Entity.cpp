@@ -15,19 +15,22 @@ SDL_Texture* Entity::getTex()
 {
 	return tex;
 }
+void Entity::setTex(SDL_Texture* p_tex)
+{
+	tex = p_tex;
+}
 SDL_Rect Entity::getCurrentFrame()
 {
 	return currentFrame;
 }
 
-void Entity::move()
+int Entity::getAngle()
 {
-	pos.x += dir.x;
-	pos.y += dir.y;
+	return angle;
 }
 
-void Entity::changeDir(Vector2f newdir)
+void Entity::setAngle(int p_angle)
 {
-	dir.x = newdir.x;
-	dir.y = newdir.y;
+	angle = p_angle;
 }
+

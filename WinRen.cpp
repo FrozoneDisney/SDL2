@@ -63,7 +63,7 @@ void WinRen::render(Entity& p_entity)
 	dst.w = p_entity.getCurrentFrame().w;
 	dst.h = p_entity.getCurrentFrame().h;
 
-	SDL_RenderCopy(renderer, p_entity.getTex(), &src, &dst);
+	SDL_RenderCopyEx(renderer, p_entity.getTex(), &src, &dst, p_entity.getAngle(), NULL, SDL_FLIP_NONE);
 }
 
 void WinRen::display()
