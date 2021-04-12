@@ -1,5 +1,5 @@
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
 
@@ -7,6 +7,7 @@
 #include "Entity.hpp"
 #include "Utils.hpp"
 #include "Snake.hpp"
+#include "Apple.hpp"
 
 int main(int argc, char* args[])
 {
@@ -23,8 +24,11 @@ int main(int argc, char* args[])
 	SDL_Texture* anchor = window.loadTex("bodyanch.png");
 	SDL_Texture* apple = window.loadTex("apple.png");
 
+	Apple edible(Vector2f(600, 350), apple);
+
 	std::vector<Snake> entities = { Snake(Vector2f(532.0f, 0.0f), player), Snake(Vector2f(499.0f, 0.0f), body), Snake(Vector2f(466.0f, 0.0f), body),Snake(Vector2f(433.0f, 0.0f), body) };
 	bool gameRunning = true;
+
 
 	SDL_Event event;
 
@@ -66,6 +70,10 @@ int main(int argc, char* args[])
 					entities.back().changeDir(entities[entities.size() - 2].getDir());
 				
 				}
+				if (keystates[SDL_SCANCODE_R])
+				{
+					edible.respawn();
+				}
 			}
 			for (Snake& e : entities)
 			{
@@ -78,6 +86,12 @@ int main(int argc, char* args[])
 					}
 				}
 				e.move();
+			}
+			if(entities[0].getPos().x >= edible.getPos().x - 16 && entities[0].getPos().x <= edible.getPos().x + 16 && entities[0].getPos().y >= edible.getPos().y - 16 && entities[0].getPos().y <= edible.getPos().y + 16 )
+			{
+				edible.respawn();
+				entities.push_back(Snake(entities.back().getAdd(), body));
+				entities.back().changeDir(entities[entities.size() - 2].getDir());
 			}
 			
 			accumulator -= timeStep;
@@ -92,6 +106,7 @@ int main(int argc, char* args[])
 		{
 			window.render(ent);
 		}
+		window.render(edible);
 
 		
 		
