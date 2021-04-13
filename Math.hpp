@@ -12,6 +12,9 @@ struct Vector2f
 	:x(p_x), y(p_y)
 	{}
 
+	bool operator== (Vector2f p_2);
+	bool operator!= (Vector2f p_2);
+
 	void print()
 	{
 		std::cout << x << ", " << y << std::endl;

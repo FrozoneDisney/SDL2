@@ -82,14 +82,14 @@ void Snake::isAligned(std::vector<Snake> p_parts)
 Vector2f Snake::getAdd()
 {
 	if (dir.x >= 1)
-		return Vector2f(getPos().x - 33, getPos().y);
+		return Vector2f(getPos().x - 32, getPos().y);
 
 	if (dir.x <= -1)
-		return Vector2f(getPos().x + 33, getPos().y);
+		return Vector2f(getPos().x + 32, getPos().y);
 	
 	if (dir.y <= 1)
-		return Vector2f(getPos().x, getPos().y + 33);
+		return Vector2f(getPos().x, getPos().y + 32);
 
 	if (dir.y >= -1)
-		return Vector2f(getPos().x, getPos().y - 33);
+		return Vector2f(getPos().x, getPos().y - 32);
 }

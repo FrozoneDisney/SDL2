@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 #include <vector>
 
@@ -24,5 +24,6 @@ public:
 private:
 	float speed;
 	Vector2f dir = Vector2f(1, 0);
+	std::vector<Vector2f> anchorList;
 
 };

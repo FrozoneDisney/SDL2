@@ -1,5 +1,5 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 #include <vector>
 
@@ -8,6 +8,7 @@
 #include "Utils.hpp"
 #include "Snake.hpp"
 #include "Apple.hpp"
+#include "Anchor.hpp"
 
 int main(int argc, char* args[])
 {
@@ -26,9 +27,9 @@ int main(int argc, char* args[])
 
 	Apple edible(Vector2f(600, 350), apple);
 
-	std::vector<Snake> entities = { Snake(Vector2f(532.0f, 0.0f), player), Snake(Vector2f(499.0f, 0.0f), body), Snake(Vector2f(466.0f, 0.0f), body),Snake(Vector2f(433.0f, 0.0f), body) };
+	std::vector<Anchor> anchors;
+	std::vector<Snake> entities = { Snake(Vector2f(532.0f, 0.0f), player), Snake(Vector2f(500.0f, 0.0f), body), Snake(Vector2f(468.0f, 0.0f), body),Snake(Vector2f(436.0f, 0.0f), body) };
 	bool gameRunning = true;
-
 
 	SDL_Event event;
 
@@ -38,7 +39,7 @@ int main(int argc, char* args[])
 	const Uint8* keystates = SDL_GetKeyboardState(NULL);
 	for (Snake& e : entities)
 	{
-		e.changeDir(Vector2f(3, 0));
+		e.changeDir(Vector2f(4, 0));
 	}
 
 	while (gameRunning)
@@ -57,37 +58,51 @@ int main(int argc, char* args[])
 				if (event.type == SDL_QUIT)
 					gameRunning = false;
 				if (keystates[SDL_SCANCODE_DOWN])
-					entities[0].changeDir(Vector2f(0, 3));
+				{
+					entities[0].changeDir(Vector2f(0, 4));
+					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
+				}
 				if (keystates[SDL_SCANCODE_UP])
-					entities[0].changeDir(Vector2f(0, -3));
+				{
+					entities[0].changeDir(Vector2f(0, -4));
+					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
+				}
 				if (keystates[SDL_SCANCODE_LEFT])
-					entities[0].changeDir(Vector2f(-3, 0));
+				{
+					entities[0].changeDir(Vector2f(-4, 0));
+					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
+				}
 				if (keystates[SDL_SCANCODE_RIGHT])
-					entities[0].changeDir(Vector2f(3, 0));
+				{
+					entities[0].changeDir(Vector2f(4, 0));
+					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
+				}
 				if (keystates[SDL_SCANCODE_E])
 				{
 					entities.push_back(Snake(entities.back().getAdd(), body));
 					entities.back().changeDir(entities[entities.size() - 2].getDir());
 				
 				}
-				if (keystates[SDL_SCANCODE_R])
-				{
-					edible.respawn();
-				}
 			}
+
+
 			for (Snake& e : entities)
 			{
 				if (e.notHead(entities))
 				{
-					if (e.isInFront(entities))
+					for (int a = 0; a < (int)anchors.size(); a++)
 					{
-						e.setTex(anchor);
-						e.isAligned(entities);
+						if (e.getPos() == anchors[a].getPos())
+						{
+							e.changeDir(anchors[a].getDir());
+							if (e.getPos() == entities.back().getPos())
+								anchors.erase(anchors.begin()+a);
+						}
 					}
 				}
 				e.move();
 			}
-			if(entities[0].getPos().x >= edible.getPos().x - 16 && entities[0].getPos().x <= edible.getPos().x + 16 && entities[0].getPos().y >= edible.getPos().y - 16 && entities[0].getPos().y <= edible.getPos().y + 16 )
+			if (entities[0].getPos().x >= edible.getPos().x - 16 && entities[0].getPos().x <= edible.getPos().x + 16 && entities[0].getPos().y >= edible.getPos().y - 16 && entities[0].getPos().y <= edible.getPos().y + 16)
 			{
 				edible.respawn();
 				entities.push_back(Snake(entities.back().getAdd(), body));
@@ -106,8 +121,12 @@ int main(int argc, char* args[])
 		{
 			window.render(ent);
 		}
-		window.render(edible);
 
+		for (Anchor& anc : anchors)
+		{
+			window.render(anc);
+		}
+		window.render(edible);
 		
 		
 		window.display();
