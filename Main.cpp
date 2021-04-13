@@ -1,5 +1,5 @@
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
 
@@ -33,6 +33,7 @@ int main(int argc, char* args[])
 
 	SDL_Event event;
 
+	float cooldown = 0;
 	const float timeStep = 0.01f;
 	float accumulator = 0.0f;
 	float currentTime = utils::hireTimeInSeconds();
@@ -50,6 +51,7 @@ int main(int argc, char* args[])
 		currentTime = newTime;
 
 		accumulator += frameTime;
+		cooldown -= frameTime;
 
 		while (accumulator >= timeStep)
 		{
@@ -57,23 +59,27 @@ int main(int argc, char* args[])
 			{
 				if (event.type == SDL_QUIT)
 					gameRunning = false;
-				if (keystates[SDL_SCANCODE_DOWN])
+				if (keystates[SDL_SCANCODE_DOWN] && entities[0].getDir() != Vector2f(0, 4) && entities[0].getDir() != Vector2f(0, -4) && cooldown <= 0)
 				{
+					cooldown = 0.05;
 					entities[0].changeDir(Vector2f(0, 4));
 					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
 				}
-				if (keystates[SDL_SCANCODE_UP])
+				if (keystates[SDL_SCANCODE_UP] && entities[0].getDir() != Vector2f(0, 4) && entities[0].getDir() != Vector2f(0, -4)&& cooldown <= 0)
 				{
+					cooldown = 0.05;
 					entities[0].changeDir(Vector2f(0, -4));
 					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
 				}
-				if (keystates[SDL_SCANCODE_LEFT])
+				if (keystates[SDL_SCANCODE_LEFT] && entities[0].getDir() != Vector2f(4, 0) && entities[0].getDir() != Vector2f(-4, 0)&& cooldown <= 0)
 				{
+					cooldown = 0.05;
 					entities[0].changeDir(Vector2f(-4, 0));
 					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
 				}
-				if (keystates[SDL_SCANCODE_RIGHT])
+				if (keystates[SDL_SCANCODE_RIGHT] && entities[0].getDir() != Vector2f(4, 0) && entities[0].getDir() != Vector2f(-4, 0)&& cooldown <= 0)
 				{
+					cooldown = 0.05;
 					entities[0].changeDir(Vector2f(4, 0));
 					anchors.push_back(Anchor(entities[0].getPos(), entities[0].getDir(), anchor));
 				}
