@@ -12,6 +12,7 @@ public:
 	{}
 
 	Vector2f getDir();
+	void changeDir(Vector2f newDir);
 
 private:
 	Vector2f dir;

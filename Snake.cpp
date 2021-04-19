@@ -4,13 +4,13 @@
 
 
 
-Snake::Snake(Vector2f p_pos, SDL_Texture* p_tex)
-	:Entity(p_pos, p_tex)
+Snake::Snake(Vector2f p_pos, SDL_Texture* p_tex, float p_speed)
+	:Entity(p_pos, p_tex), speed(p_speed)
 {}
 
 void Snake::move()
 {
-	Vector2f tenp(getPos().x + dir.x, getPos().y + dir.y);
+	Vector2f tenp(getPos().x + dir.x * speed, getPos().y + dir.y * speed);
 	setPos(tenp);
 }
 
@@ -35,6 +35,17 @@ void Snake::changeDir(Vector2f newdir)
 Vector2f Snake::getDir()
 {
 	return dir;
+}
+
+float Snake::getSpeed()
+{
+	return speed;
+}
+
+void Snake::updateSpeed(float p_multiplier)
+{
+	speed *= p_multiplier;
+	std::cout << speed << std::endl;
 }
 
 bool Snake::isInFront(std::vector<Snake> p_parts)
@@ -87,9 +98,9 @@ Vector2f Snake::getAdd()
 	if (dir.x <= -1)
 		return Vector2f(getPos().x + 32, getPos().y);
 	
-	if (dir.y <= 1)
+	if (dir.y <= -1)
 		return Vector2f(getPos().x, getPos().y + 32);
 
-	if (dir.y >= -1)
+	if (dir.y >= 1)
 		return Vector2f(getPos().x, getPos().y - 32);
 }

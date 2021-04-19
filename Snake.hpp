@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 #include <vector>
 
@@ -10,11 +10,12 @@
 class Snake : public Entity
 {
 public:
-	Snake(Vector2f p_pos, SDL_Texture* p_tex);
+	Snake(Vector2f p_pos, SDL_Texture* p_tex, float p_speed);
 	void move();
 	void changeDir(Vector2f newDir);
 	Vector2f getDir();
-	void genBody(int p_count);
+	float getSpeed();
+	void updateSpeed(float p_multiplier);
 	bool notHead(std::vector<Snake> p_parts);
 	bool isInFront(std::vector<Snake> p_parts);
 	void isAligned(std::vector<Snake> p_parts);

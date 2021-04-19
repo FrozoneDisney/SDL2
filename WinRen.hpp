@@ -1,5 +1,5 @@
 #pragma once
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <iostream>
 
 #include "Entity.hpp"
@@ -10,6 +10,7 @@ public:
 	WinRen(const char* p_title, int p_w, int p_h);
 	void cleanUp();
 	SDL_Texture* loadTex(const char* p_fpath);
+	SDL_Texture* loadText(const char* p_fpath, int p_score);
 
 	int getRefreshRate();
 

@@ -8,6 +8,6 @@ Apple::Apple(Vector2f p_pos, SDL_Texture* p_tex)
 
 void Apple::respawn()
 {
-    Vector2f temp = Vector2f(rand() % 1280, rand() % 720);
+    Vector2f temp = Vector2f((rand() % 1472 + 32), (rand() % 800 + 32));
     setPos(temp);
 }

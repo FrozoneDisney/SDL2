@@ -1,5 +1,8 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <iostream>
+#include <string>
 
 #include "WinRen.hpp"
 #include "Entity.hpp"
@@ -7,7 +10,7 @@
 WinRen::WinRen(const char* p_title, int p_w, int p_h)
 	:window(NULL), renderer(NULL)
 {
-	window = SDL_CreateWindow(p_title, 400, 250, p_w, p_h, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(p_title, 300, 160, p_w, p_h, SDL_WINDOW_SHOWN);
 
 	if (window == NULL)
 	{
@@ -31,6 +34,15 @@ SDL_Texture* WinRen::loadTex(const char* p_fpath)
 		std::cout << "Failed to load texture, error: " << SDL_GetError() << std::endl;
 
 	return texture;
+}
+
+SDL_Texture* WinRen::loadText(const char* p_fpath, int p_score)
+{
+	TTF_Font* retro = TTF_OpenFont(p_fpath, 24);
+	SDL_Color White = { 255, 255 ,255 };
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(retro, "Score: ", White);
+	SDL_Texture* ret = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+	return ret;
 }
 
 int WinRen::getRefreshRate()
